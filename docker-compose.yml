@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  nuxt:
+    build: ./front/
+    container_name: front-app
+    restart: always
+    ports:
+      - "3000:3000"
+    command:
+      "npm start"
+
+  nginx:
+    image: nginx:1.13
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+      - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+    depends_on:
+      - nuxt
