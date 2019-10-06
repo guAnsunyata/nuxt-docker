@@ -11,14 +11,16 @@ services:
       "npm start"
 
   nginx:
-    image: nginx:1.13
+    build:
+      context: ./nginx
     container_name: nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ${NGINX_SITES_PATH}:/etc/nginx/conf.d
       - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
-      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
-      - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+      - ./ssl/local.nuxt-app.com.tw.crt:/etc/ssl/certs/nginx.crt
+      - ./ssl/local.nuxt-app.com.tw.key:/etc/ssl/private/nginx.key
     depends_on:
       - nuxt
